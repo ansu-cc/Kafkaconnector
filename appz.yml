@@ -1,0 +1,48 @@
+    app:
+        name: Kafka
+        code: kafka
+        notify: appzdev@cloudbourne.co
+
+    build:
+        version: 4.0
+        env: PROD
+        build_file: none
+        output_files: output/*.zip
+        image_template: kafka-4.0
+
+    deploy:
+        context: tipreprod/PROD
+        type: statefulset
+        replicas: 3
+        #ingress: none
+        #resources: x-large
+        port:
+        - 8083
+        
+        
+
+    volumes:
+      - claim: kafka-connector-data
+        mount: /appz/data
+        name: data
+        size: 50Gi
+        matchLabels: false
+
+    properties:
+        SITE_PRIVATE_KEY:
+          vault: SITE_PRIVATE_KEY
+        CONNECT_BOOTSTRAP_SERVERS: kafka-bootstrap.tipreprod-prod.svc.cluster.local:9094
+        CONNECT_GROUP_ID: m2-connect-cluster
+        CONNECT_CONFIG_STORAGE_TOPIC: mm2-configs
+        CONNECT_OFFSET_STORAGE_TOPIC: mm2-offsets
+        CONNECT_STATUS_STORAGE_TOPIC: mm2-status
+        CONNECT_KEY_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+        CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect-svc.tipreprod-prod.svc.cluster.local
+        CONNECT_PLUGIN_PATH: /usr/share/java
+        CONNECT_REPLICATION_FACTOR: 3
+        SOURCE_CLUSTER_BOOTSTRAP_SERVERS: b-1.msk-dev-md-kafka01.7i0n81.c19.kafka.us-east-1.amazonaws.com:9092,b-2.msk-dev-md-kafka01.7i0n81.c19.kafka.us-east-1.amazonaws.com:9092,b-3.msk-dev-md-kafka01.7i0n81.c19.kafka.us-east-1.amazonaws.com:9092
+        SOURCE_CLUSTER_SECURITY_PROTOCOL: PLAINTEXT
+        TARGET_CLUSTER_SECURITY_PROTOCOL: PLAINTEXT
+        
+        
