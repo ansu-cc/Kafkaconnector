@@ -19,7 +19,6 @@
         port:
         - 8083
         
-
     volumes:
       - claim: kafka-connector-data
         mount: /appz/data
