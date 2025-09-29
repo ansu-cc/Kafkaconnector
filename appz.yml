@@ -1,19 +1,19 @@
     app:
-        name: Kafka
+        name: KafkaConncetor
         code: kafka
         notify: appzdev@cloudbourne.co
 
     build:
-        version: 4.0
+        version: 7.5
         env: PROD
         build_file: none
         output_files: output/*.zip
-        image_template: kafka-4.0
+        image_template: kafkaconnector-7.5
 
     deploy:
         context: tipreprod/PROD
         type: statefulset
-        replicas: 3
+        replicas: 1
         #ingress: none
         #resources: x-large
         port:
